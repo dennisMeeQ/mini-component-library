@@ -40,12 +40,20 @@ const getRightEdgeRadius = (value) => {
 
 const ProgressBar = ({ value, size }) => {
   const styles = SIZES[size];
+  const innerValue = sanitiseValue(value);
 
   return (
-    <Wrapper style={styles}>
+    <Wrapper
+      style={styles}
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow={innerValue}
+      aria-valuetext={`${innerValue}%`}
+    >
       <Bar
         style={{
-          '--width': `${sanitiseValue(value)}%`,
+          '--width': `${innerValue}%`,
           '--right-edge-radius': getRightEdgeRadius(value),
         }}
       />
