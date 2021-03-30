@@ -6,9 +6,19 @@ import { COLORS } from '../../constants';
 import VisuallyHidden from '../VisuallyHidden';
 
 const SIZES = {
-  small: { '--border-radius': '4px', '--height': '8px' },
-  medium: { '--border-radius': '4px', '--height': '12px' },
-  large: { '--border-radius': '8px', '--height': '24px', '--padding': '4px' },
+  small: {
+    radius: '4px',
+    height: '8px',
+  },
+  medium: {
+    radius: '4px',
+    height: '12px',
+  },
+  large: {
+    radius: '8px',
+    height: '24px',
+    padding: '4px',
+  },
 };
 
 const sanitiseValue = (value) => {
@@ -26,37 +36,27 @@ const sanitiseValue = (value) => {
   }
 };
 
-const getRightEdgeRadius = (value) => {
-  if (value < 99.8) {
-    return '0px';
-  } else if (value >= 99.8 && value < 99.9) {
-    return '2px';
-  } else if (value >= 99.9) {
-    return '4px';
-  } else {
-    return '0px';
-  }
-};
-
 const ProgressBar = ({ value, size }) => {
   const styles = SIZES[size];
   const innerValue = sanitiseValue(value);
 
   return (
     <Wrapper
-      style={styles}
+      style={{ '--border-radius': styles.radius, '--padding': styles.padding }}
       role="progressbar"
       aria-valuemin="0"
       aria-valuemax="100"
       aria-valuenow={innerValue}
       aria-valuetext={`${innerValue}%`}
     >
-      <Bar
-        style={{
-          '--width': `${innerValue}%`,
-          '--right-edge-radius': getRightEdgeRadius(value),
-        }}
-      />
+      <BarWrapper>
+        <Bar
+          style={{
+            '--width': `${innerValue}%`,
+            '--height': styles.height,
+          }}
+        />
+      </BarWrapper>
     </Wrapper>
   );
 };
@@ -66,15 +66,19 @@ const Wrapper = styled.div`
   background-color: ${COLORS.transparentGray15};
   box-shadow: inset 0px 2px 4px ${COLORS.transparentGray35};
   border-radius: var(--border-radius);
-  height: var(--height);
   padding: var(--padding);
+`;
+
+const BarWrapper = styled.div`
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
 const Bar = styled.div`
   background-color: ${COLORS.primary};
-  border-radius: 4px var(--right-edge-radius) var(--right-edge-radius) 4px;
+  border-radius: 4px 0 0 4px;
   width: var(--width);
-  height: 100%;
+  height: var(--height);
 `;
 
 export default ProgressBar;
